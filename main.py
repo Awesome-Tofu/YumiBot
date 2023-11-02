@@ -33,7 +33,7 @@ keyboard = InlineKeyboardMarkup([[button]])
 async def commands_callback(update: Update, context: CallbackContext):
     await update.callback_query.answer("Yamatte Kudasai..")
     await update.callback_query.edit_message_caption(
-        caption="Here are the commands of this bot \n\n\n⭐PERV MENU\n/search <query> Get xvideos\n\n\n⭐BOORU MENU\n/sb Random sfw safebooru\n/gb Random sfw gelbooru\n/hb Random nsfw gelbooru\n/rb Random nsfw realbooru\n\n\n⭐AI MENU\n/imagine <query> Generates image according to text\n/gpt <query> Ask ChatGPT\n/bard <query> Ask Bard\n\n\n⭐Translation\n/tr <language code> translates the replied message",
+        caption="Here are the commands of this bot \n\n\n⭐PERV MENU\n/search <query> Get xvideos\n\n\n⭐BOORU MENU\n/sb Random sfw safebooru\n/gb Random sfw gelbooru\n/hb Random nsfw gelbooru\n/rb Random nsfw realbooru\n\n\n⭐AI MENU\n/imagine <query> Generates image according to text\n/gpt <query> Ask ChatGPT\n/bard <query> Ask Bard\n\n\n⭐Translation\n/tr <language code> translates the replied message\n\n\n⭐Tools\n/pp sends you match pfp",
         reply_markup=InlineKeyboardMarkup(
             [[InlineKeyboardButton("Back", callback_data="back")]]
         ),
