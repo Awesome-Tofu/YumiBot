@@ -237,7 +237,7 @@ async def tr_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 #CouplePP
-async def bard_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def pp_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     couplepfp_api = "https://api.akuari.my.id/randomimage/ppcouple"
     response = requests.get(couplepfp_api)
     pfp = response.json()["hasil"]
@@ -295,6 +295,7 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("gpt", gpt_command))
     app.add_handler(CommandHandler("bard", bard_command))
     app.add_handler(CommandHandler("tr", tr_command))
+    app.add_handler(CommandHandler("pp", pp_command))
     app.add_handler(CallbackQueryHandler(commands_callback, pattern="commands"))
     app.add_handler(CallbackQueryHandler(back_callback, pattern="back"))
 
