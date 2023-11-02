@@ -236,6 +236,17 @@ async def tr_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("No text to translate")
 
 
+#CouplePP
+async def bard_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    couplepfp_api = "https://api.akuari.my.id/randomimage/ppcouple"
+    response = requests.get(couplepfp_api)
+    pfp = response.json()["hasil"]
+    male = pfp["cowok"]
+    female = pfp["cewek"]
+    await update.message.reply_photo(male)
+    await update.message.reply_photo(female)
+
+
 # Responses
 def handle_response(text: str) -> str:
     processed: str = text.lower()
