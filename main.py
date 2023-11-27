@@ -15,11 +15,13 @@ from telegram.ext import (
 from animegifs import animegifs
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
-TOKEN: Final = "6485368421:AAE0Yg1vIWkDVoTy-25Y0M6J9l1A9P-mF6Q"
+TOKEN: Final = "6485368421:AAGxLy28TNyR9bHsXqkwKmyc-EGSx-YNdLQ"
 # API endpoint URL
 BOT_USERNAME: Final = "@tttofubot"
 WIBU_KEY = "WIBUAPI-zYNTkxNTMzNTQ4NkRldnNZQm90c1N1cHBvcnQ=x"
 
+# from keep_alive import keep_alive
+# keep_alive()
 
 # KeyboardInline
 import asyncio
@@ -33,7 +35,7 @@ keyboard = InlineKeyboardMarkup([[button]])
 async def commands_callback(update: Update, context: CallbackContext):
     await update.callback_query.answer("Yamatte Kudasai..")
     await update.callback_query.edit_message_caption(
-        caption="Here are the commands of this bot \n\n\n⭐PERV MENU\n/search <query> Get xvideos\n\n\n⭐BOORU MENU\n/sb Random sfw safebooru\n/gb Random sfw gelbooru\n/hb Random nsfw gelbooru\n/rb Random nsfw realbooru\n\n\n⭐AI MENU\n/imagine <query> Generates image according to text\n/gpt <query> Ask ChatGPT\n/bard <query> Ask Bard\n\n\n⭐Translation\n/tr <language code> translates the replied message\n\n\n⭐Tools\n/pp sends you match pfp",
+        caption="Here are the commands of this bot \n\n\n⭐PERV MENU\n/search <query> Get xvideos\n/hrandom Get random hentai video\n\n\n⭐BOORU MENU\n/sb Random sfw safebooru\n/gb Random sfw gelbooru\n/hb Random nsfw gelbooru\n/rb Random nsfw realbooru\n\n\n⭐AI MENU\n/imagine <query> Generates image according to text\n/gpt <query> Ask ChatGPT\n/bard <query> Ask Bard\n\n\n⭐Translation\n/tr <language code> translates the replied message\n\n\n⭐Tools\n/pp sends you match pfp",
         reply_markup=InlineKeyboardMarkup(
             [[InlineKeyboardButton("Back", callback_data="back")]]
         ),
@@ -59,6 +61,7 @@ early_stickers = [
 
 # Start command
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_sticker(random.choice(early_stickers))
     first_name = update.message.chat.first_name
     gifs = animegifs.Animegifs()
     gif = gifs.get_gif(
@@ -66,7 +69,6 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
             ["wave", "kiss", "lick", "poke", "pat", "tease", "blush", "bite", "love"]
         )
     )
-    await update.message.reply_sticker(random.choice(early_stickers))
     await update.message.reply_animation(
         gif, caption=f"Hello {first_name},\n" + START_TEXT, reply_markup=keyboard
     )
@@ -201,7 +203,7 @@ async def bard_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         response = requests.get(bardapi)
         json_data = response.json()["respon"]
         translate_api = (
-            f"https://translate-gw3m.onrender.com/translate?q={json_data}&lang=en"
+            f"https://translate-api-gray.vercel.app/translate?q={json_data}&lang=en"
         )
         response_tr = requests.get(translate_api)
         translated_data = response_tr.json()["text"]
@@ -219,16 +221,16 @@ async def tr_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
         reply_text = reply_to_message.text
         if not utext:
             translate_api = (
-                f"https://translate-gw3m.onrender.com/translate?q={reply_text}&lang=en"
+                f"https://translate-api-gray.vercel.app/translate?q={reply_text}&lang=en"
             )
             response = requests.get(translate_api)
-            json_data = response.json()["text"]
-            await update.message.reply_text(f"{json_data}")
+            json_data = response.json()
+            await update.message.reply_text(f"Auto Translated from {json_data['from']} to __en__\n\n{json_data['text']}")
         else:
-            translate_api = f"https://translate-gw3m.onrender.com/translate?q={reply_text}&lang={utext}"
+            translate_api = f"https://translate-api-gray.vercel.app/translate?q={reply_text}&lang={utext}"
             response = requests.get(translate_api)
-            json_data = response.json()["text"]
-            await update.message.reply_text(f"{json_data}")
+            json_data = response.json()
+            await update.message.reply_text(f"Translated from {json_data['from']} to {utext}\n\n{json_data['text']}")
     else:
         await update.message.reply_sticker(
             "CAACAgUAAxkBAAEKqAtlQjcJqQFey6ZficYSAxNLLTRFWAACowQAAs5A6FYjoH7KHMPGVzME"
@@ -246,15 +248,37 @@ async def pp_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_photo(male)
     await update.message.reply_photo(female)
 
+#randomhentai
+async def hrandom_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+  try:
+    await update.message.reply_text("downloading...")
+    hentai_api = "https://hentaibar.onrender.com/random"
+    response = requests.get(hentai_api)
+    print(response.json())
+    await asyncio.sleep(30)
+    await update.message.reply_text("uploading...")
+    # thumb = response.json()["thum"]
+    name = response.json()["name"]
+    video = response.json()["file"]
+    await asyncio.sleep(30)
+    await update.message.reply_video(
+        video,
+        caption=f"**Title**: {name}",
+        # thumbnail=thumb,
+    )
+  except Exception as e:
+    print(f"An error occurred: {e}")
+    await update.message.reply_text(f"Error\n{e}")
+
 
 # Responses
 def handle_response(text: str) -> str:
     processed: str = text.lower()
 
-    if "hello" in processed:
-        return "hey there!"
+    # if "hello" in processed:
+    #     return "hey there!"
 
-    return "IDK bruh"
+    # return ""
 
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -296,6 +320,7 @@ if __name__ == "__main__":
     app.add_handler(CommandHandler("bard", bard_command))
     app.add_handler(CommandHandler("tr", tr_command))
     app.add_handler(CommandHandler("pp", pp_command))
+    app.add_handler(CommandHandler("hrandom", hrandom_command))
     app.add_handler(CallbackQueryHandler(commands_callback, pattern="commands"))
     app.add_handler(CallbackQueryHandler(back_callback, pattern="back"))
 
